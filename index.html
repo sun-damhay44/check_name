@@ -1,0 +1,46 @@
+<script>
+    async function loadData() {
+      const res = await fetch('/load');
+      const result = await res.json();
+      if (result.success) {
+        renderStudents(result.data.students);
+        renderAttendance(result.data.attendance);
+      } else {
+        alert('โหลดข้อมูลไม่สำเร็จ: ' + result.error);
+      }
+    }
+  
+    function renderStudents(students) {
+      const tbody = document.querySelector('#studentsTable tbody');
+      tbody.innerHTML = '';
+      students.forEach(std => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${std.number}</td>
+          <td>${std.id}</td>
+          <td>${std.name}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  
+    function renderAttendance(attendance) {
+      const tbody = document.querySelector('#attendanceTable tbody');
+      tbody.innerHTML = '';
+      Object.entries(attendance).forEach(([date, data]) => {
+        Object.entries(data.students).forEach(([num, info]) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${date}</td>
+            <td>${num}</td>
+            <td>${info.status}</td>
+            <td>${info.note}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+  
+    window.onload = loadData;
+  </script>
+  
