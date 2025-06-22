@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบบันทึกการมาเรียน</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      margin: 0;
+      background-color: #f4faff;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(to right, #e0f0ff, #b2dcff);
+      text-align: center;
+      padding: 20px 0;
+    }
+    header img {
+      width: 100px;
+    }
+    header h1 {
+      margin: 10px 0 0;
+      color: #0d47a1;
+    }
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .student-list, .attendance-log {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #1976d2;
+    }
+    .btn {
+      background: #1976d2;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .btn-danger { background-color: #e53935; }
+    .btn-success { background-color: #43a047; }
+    .btn-warning { background-color: #fbc02d; color: #000; }
+    .btn-info { background-color: #039be5; }
+    .btn:hover { opacity: 0.9; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    .status-row.green { background-color: #e8f5e9; }
+    .status-row.red { background-color: #ffebee; }
+    .status-row.yellow { background-color: #fffde7; }
+    .status-row.orange { background-color: #fff3e0; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://scontent.fbkk22-8.fna.fbcdn.net/v/t39.30808-6/905243514383211" alt="โลโก้">
+    <h1>ระบบบันทึกการมาเรียน ชั้นประถมศึกษา ปีการศึกษา<br>ห้องเรียนครูพิมพ์ประไพ ดำหาย<br>โรงเรียนบ้านไสไทย</h1>
+  </header>
+
+  <div class="container">
+    <section class="student-list">
+      <h2>รายชื่อนักเรียน</h2>
+      <input type="file" id="excelUpload">
+      <button class="btn" onclick="uploadExcel()">เพิ่มรายชื่อจาก Excel</button>
+      <button class="btn" onclick="manualAddStudent()">เพิ่มรายชื่อ</button>
+      <table>
+        <thead>
+          <tr><th>เลขที่</th><th>รหัส</th><th>ชื่อ - สกุล</th><th>แก้ไข</th><th>ลบ</th></tr>
+        </thead>
+        <tbody id="studentTable">
+          <!-- student list here -->
+        </tbody>
+      </table>
+    </section>
+
+    <section class="attendance-log">
+      <h2>เช็คชื่อประจำวัน <input type="date" id="datePicker"></h2>
+      <table>
+        <thead>
+          <tr><th>ชื่อ</th><th>มาเรียน</th><th>ป่วย</th><th>ลา</th><th>ขาด</th></tr>
+        </thead>
+        <tbody id="attendanceTable">
+          <!-- attendance rows -->
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>รายงานการมาเรียน</h2>
+      <button class="btn btn-info" onclick="fetchFromSheet()">เรียกดูข้อมูลจาก Google Sheet</button>
+      <div id="summaryReport">
+        <!-- summary report here -->
+      </div>
+    </section>
+
+    <section>
+      <h2>พฤติกรรมของนักเรียน</h2>
+      <textarea placeholder="จดบันทึกพฤติกรรม..." rows="5" style="width: 100%;"></textarea>
+    </section>
+  </div>
+
+  <script>
+    function uploadExcel() {
+      Swal.fire('กำลังอัปโหลด', 'ระบบกำลังประมวลผล Excel', 'info');
+      // จัดการอ่านไฟล์ Excel
+    }
+
+    function manualAddStudent() {
+      Swal.fire({
+        title: 'เพิ่มรายชื่อนักเรียน',
+        html: '<input id="name" placeholder="ชื่อ-สกุล" class="swal2-input">' +
+              '<input id="number" placeholder="เลขที่" class="swal2-input">',
+        preConfirm: () => {
+          // เพิ่มนักเรียน
+        }
+      });
+    }
+
+    function fetchFromSheet() {
+      fetch('https://YOUR_APP_SCRIPT_URL?callback=handleData')
+        .then(() => Swal.fire('สำเร็จ', 'โหลดข้อมูลสำเร็จ', 'success'));
+    }
+
+    function handleData(data) {
+      console.log(data);
+    }
+  </script>
+</body>
+</html>
